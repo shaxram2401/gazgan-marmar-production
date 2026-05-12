@@ -7,8 +7,12 @@ import { TrendingUp, MessageCircle, Download, Target, DollarSign, Users } from '
 
 export const dynamic = 'force-dynamic';
 
-interface LeadDoc extends Lead { createdAt?: { toDate?: () => Date } }
+type ServerTimestamp = { toDate: () => Date };
 
+type LeadDoc = Omit<Lead, 'createdAt' | 'updatedAt'> & {
+  createdAt?: ServerTimestamp;
+  updatedAt?: ServerTimestamp;
+};
 async function getAnalytics() {
   const since90 = new Date(); since90.setDate(since90.getDate() - 90);
   const since30 = new Date(); since30.setDate(since30.getDate() - 30);
