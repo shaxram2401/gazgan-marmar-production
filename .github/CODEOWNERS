@@ -1,0 +1,12 @@
+# Default owner for everything in the repo
+*                              @shaxram2401
+
+# Critical infrastructure — require explicit review
+apps/admin/firebase/           @shaxram2401
+apps/admin/src/lib/auth.*      @shaxram2401
+apps/admin/src/middleware.ts   @shaxram2401
+apps/admin/src/app/api/auth/   @shaxram2401
+apps/admin/src/app/api/admin/  @shaxram2401
+.github/                       @shaxram2401
+SECURITY.md                    @shaxram2401
+LICENSE                        @shaxram2401

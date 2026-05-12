@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gazgan Marmar — Design System</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/tokens.css" />
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--color-ink);background:var(--color-paper);line-height:1.55;font-size:14px;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  /* Layout */
+  .ds-shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+  .ds-side{background:var(--color-ink);color:#fff;padding:32px 24px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .ds-brand{display:flex;align-items:center;gap:12px;margin-bottom:48px}
+  .ds-mark{width:36px;height:36px;border:1px solid #fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-style:italic;font-size:18px}
+  .ds-brand-text{font-family:var(--font-serif);font-size:14px;letter-spacing:.22em;text-transform:uppercase}
+  .ds-nav{display:flex;flex-direction:column;gap:2px}
+  .ds-nav a{display:block;padding:10px 14px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);transition:.3s;text-decoration:none}
+  .ds-nav a:hover{color:#fff;background:rgba(255,255,255,.04)}
+  .ds-nav .group{font-size:10px;letter-spacing:.28em;color:var(--color-gold);margin:24px 0 8px;padding:0 14px}
+
+  .ds-main{padding:48px 64px;max-width:1080px}
+  .ds-hero{margin-bottom:80px;padding-bottom:48px;border-bottom:1px solid var(--color-line)}
+  .ds-eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--color-gold);font-weight:500;margin-bottom:18px}
+  h1.ds-title{font-family:var(--font-serif);font-size:64px;font-weight:300;letter-spacing:-.01em;line-height:1.05}
+  h1.ds-title em{color:var(--color-gold);font-style:italic}
+  .ds-subtitle{font-size:16px;color:var(--color-muted);margin-top:18px;max-width:560px;line-height:1.7}
+
+  section{margin-top:80px;scroll-margin-top:30px}
+  h2.ds-section-title{font-family:var(--font-serif);font-size:34px;font-weight:400;letter-spacing:-.005em;margin-bottom:8px}
+  .ds-section-eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--color-gold);font-weight:500;margin-bottom:10px}
+  .ds-section-desc{color:var(--color-muted);font-size:14px;line-height:1.7;max-width:640px;margin-bottom:32px}
+
+  .grid{display:grid;gap:1px;background:var(--color-line);border:1px solid var(--color-line)}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+  .grid.cols-5{grid-template-columns:repeat(5,1fr)}
+
+  .swatch{background:#fff;padding:24px;display:flex;flex-direction:column;gap:14px}
+  .swatch-fill{aspect-ratio:2/1;border:1px solid rgba(0,0,0,.05)}
+  .swatch-name{font-size:13px;font-weight:500;color:var(--color-ink)}
+  .swatch-hex{font-family:var(--font-mono);font-size:11px;color:var(--color-muted);letter-spacing:.02em}
+  .swatch-var{font-family:var(--font-mono);font-size:10px;color:var(--color-gold);letter-spacing:.04em}
+
+  /* Type scale */
+  .type-row{display:grid;grid-template-columns:120px 1fr 200px;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--color-line)}
+  .type-label{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--color-muted);font-weight:500}
+  .type-sample{font-family:var(--font-serif);color:var(--color-ink);line-height:1}
+  .type-meta{font-family:var(--font-mono);font-size:11px;color:var(--color-muted);letter-spacing:.02em;text-align:right}
+
+  /* Spacing scale */
+  .space-row{display:flex;align-items:center;gap:24px;padding:12px 0;border-bottom:1px solid var(--color-line);font-family:var(--font-mono);font-size:12px}
+  .space-label{width:60px;color:var(--color-muted)}
+  .space-bar{background:var(--color-gold);height:14px}
+  .space-px{margin-left:auto;color:var(--color-muted)}
+
+  /* Buttons / inputs / badges (samples) */
+  .demo{background:#fff;padding:36px;border:1px solid var(--color-line);display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .demo + .demo{margin-top:1px}
+  .btn{display:inline-flex;align-items:center;gap:14px;padding:14px 28px;font-family:var(--font-sans);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;border:1px solid currentColor;transition:all .3s var(--ease-out);cursor:pointer;background:transparent;color:inherit;text-decoration:none}
+  .btn-gold{background:var(--color-gold);border-color:var(--color-gold);color:#fff}
+  .btn-gold:hover{background:transparent;color:var(--color-ink);border-color:var(--color-ink)}
+  .btn-ink{background:var(--color-ink);border-color:var(--color-ink);color:#fff}
+  .btn-ink:hover{background:transparent;color:var(--color-ink)}
+  .btn-ghost{background:transparent;color:var(--color-ink);border-color:var(--color-line)}
+  .btn-ghost:hover{border-color:var(--color-ink)}
+  .btn-arrow{width:14px;height:1px;background:currentColor;position:relative}
+  .btn-arrow::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg)}
+
+  .badge{display:inline-flex;align-items:center;padding:4px 10px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border:1px solid}
+  .badge-neutral{background:var(--color-paper);color:var(--color-ink);border-color:var(--color-line)}
+  .badge-gold{background:rgba(176,141,79,.1);color:var(--color-gold-dark);border-color:rgba(176,141,79,.3)}
+  .badge-green{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+  .badge-red{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+  .badge-blue{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+  .badge-amber{background:#fffbeb;color:#b45309;border-color:#fde68a}
+
+  .field{display:flex;flex-direction:column;gap:8px;min-width:240px}
+  .field label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-muted);font-weight:500}
+  .field input,.field textarea,.field select{width:100%;height:44px;padding:0 12px;background:#fff;border:1px solid var(--color-line);font-size:14px;color:var(--color-ink);font-family:var(--font-sans)}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--color-ink)}
+
+  /* Cards */
+  .card-sample{background:#fff;border:1px solid var(--color-line);overflow:hidden}
+  .card-image{height:180px;background:linear-gradient(135deg,#1a1a1a,#0a0a0a) center/cover}
+  .card-image[data-marble]{background-image:url('https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=800&q=80')}
+  .card-body{padding:24px}
+  .card-cat{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--color-gold);font-weight:500;margin-bottom:8px}
+  .card-title{font-family:var(--font-serif);font-size:24px;font-weight:500;margin-bottom:8px}
+  .card-desc{font-size:13px;color:var(--color-muted);line-height:1.7}
+
+  /* Hero pattern preview */
+  .hero-preview{aspect-ratio:21/9;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+  .hero-preview::before{content:"";position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1604147706283-d7119b5b822c?auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;opacity:.5}
+  .hero-preview::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.75))}
+  .hero-preview-content{position:relative;z-index:1;padding:60px 40px}
+  .hero-preview-eyebrow{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:14px}
+  .hero-preview-title{font-family:var(--font-serif);font-size:48px;font-weight:300;letter-spacing:.04em;line-height:1}
+  .hero-preview-divider{width:50px;height:1px;background:var(--color-gold);margin:18px auto}
+  .hero-preview-sub{font-size:11px;letter-spacing:.4em;text-transform:uppercase}
+
+  /* Token panels */
+  .panel{background:#fff;border:1px solid var(--color-line);padding:24px}
+  .panel + .panel{margin-top:1px}
+  .panel-label{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--color-muted);margin-bottom:6px}
+  .panel-value{font-family:var(--font-mono);font-size:14px;color:var(--color-ink)}
+
+  code.inline{font-family:var(--font-mono);background:var(--color-paper);padding:2px 6px;font-size:12px;border:1px solid var(--color-line);color:var(--color-gold-dark)}
+
+  /* Shadow demo */
+  .shadow-demo{padding:32px;background:#fff;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--color-muted)}
+
+  @media (max-width:960px){
+    .ds-shell{grid-template-columns:1fr}
+    .ds-side{position:relative;height:auto}
+    .ds-main{padding:32px 24px}
+    .grid.cols-4,.grid.cols-5{grid-template-columns:repeat(2,1fr)}
+    h1.ds-title{font-size:42px}
+  }
+</style>
+</head>
+<body>
+<div class="ds-shell">
+
+  <aside class="ds-side">
+    <div class="ds-brand">
+      <span class="ds-mark">G</span>
+      <span class="ds-brand-text">Gazgan&nbsp;Marmar</span>
+    </div>
+    <div class="ds-nav">
+      <span class="group">Foundations</span>
+      <a href="#colors">Colors</a>
+      <a href="#typography">Typography</a>
+      <a href="#spacing">Spacing</a>
+      <a href="#shadows">Shadows</a>
+      <a href="#motion">Motion</a>
+
+      <span class="group">Components</span>
+      <a href="#buttons">Buttons</a>
+      <a href="#badges">Badges</a>
+      <a href="#fields">Form fields</a>
+      <a href="#cards">Cards</a>
+      <a href="#hero">Hero pattern</a>
+
+      <span class="group">Reference</span>
+      <a href="#usage">Usage</a>
+    </div>
+  </aside>
+
+  <main class="ds-main">
+    <header class="ds-hero">
+      <div class="ds-eyebrow">Design System · v1.0</div>
+      <h1 class="ds-title">A premium language<br>for <em>natural stone</em>.</h1>
+      <p class="ds-subtitle">Foundations, components, and patterns shared across the Gazgan Marmar website and admin console. Every token below maps to a CSS variable and a TypeScript export — change once, propagate everywhere.</p>
+    </header>
+
+    <!-- COLORS -->
+    <section id="colors">
+      <div class="ds-section-eyebrow">01 — Foundation</div>
+      <h2 class="ds-section-title">Color</h2>
+      <p class="ds-section-desc">A high-contrast palette anchored by ink black on paper white, with gold as the single luxury accent. Status colors are reserved for system feedback only.</p>
+
+      <h3 style="font-family:var(--font-serif);font-size:18px;font-weight:500;margin-bottom:14px">Core</h3>
+      <div class="grid cols-4">
+        <div class="swatch"><div class="swatch-fill" style="background:#0a0a0a"></div><div><div class="swatch-name">Ink</div><div class="swatch-hex">#0a0a0a</div><div class="swatch-var">--color-ink</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#1c1c1c"></div><div><div class="swatch-name">Graphite</div><div class="swatch-hex">#1c1c1c</div><div class="swatch-var">--color-graphite</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#fafaf8;border-color:#e6e6e6"></div><div><div class="swatch-name">Paper</div><div class="swatch-hex">#fafaf8</div><div class="swatch-var">--color-paper</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#fff;border-color:#e6e6e6"></div><div><div class="swatch-name">White</div><div class="swatch-hex">#ffffff</div><div class="swatch-var">--color-white</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#e6e6e6"></div><div><div class="swatch-name">Line</div><div class="swatch-hex">#e6e6e6</div><div class="swatch-var">--color-line</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#6b6b6b"></div><div><div class="swatch-name">Muted</div><div class="swatch-hex">#6b6b6b</div><div class="swatch-var">--color-muted</div></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-serif);font-size:18px;font-weight:500;margin:32px 0 14px">Accent · Gold</h3>
+      <div class="grid cols-4">
+        <div class="swatch"><div class="swatch-fill" style="background:#8e6f3a"></div><div><div class="swatch-name">Gold · Dark</div><div class="swatch-hex">#8e6f3a</div><div class="swatch-var">--color-gold-dark</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#b08d4f"></div><div><div class="swatch-name">Gold</div><div class="swatch-hex">#b08d4f</div><div class="swatch-var">--color-gold</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#c9a76a"></div><div><div class="swatch-name">Gold · Light</div><div class="swatch-hex">#c9a76a</div><div class="swatch-var">--color-gold-light</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:rgba(176,141,79,.1);border-color:rgba(176,141,79,.3)"></div><div><div class="swatch-name">Gold · Soft</div><div class="swatch-hex">rgba(...,.08)</div><div class="swatch-var">--color-gold-soft</div></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-serif);font-size:18px;font-weight:500;margin:32px 0 14px">System feedback</h3>
+      <div class="grid cols-4">
+        <div class="swatch"><div class="swatch-fill" style="background:#10b981"></div><div><div class="swatch-name">Success</div><div class="swatch-hex">#10b981</div><div class="swatch-var">--color-success</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#f59e0b"></div><div><div class="swatch-name">Warning</div><div class="swatch-hex">#f59e0b</div><div class="swatch-var">--color-warning</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#dc2626"></div><div><div class="swatch-name">Danger</div><div class="swatch-hex">#dc2626</div><div class="swatch-var">--color-danger</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:#2563eb"></div><div><div class="swatch-name">Info</div><div class="swatch-hex">#2563eb</div><div class="swatch-var">--color-info</div></div></div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section id="typography">
+      <div class="ds-section-eyebrow">02 — Foundation</div>
+      <h2 class="ds-section-title">Typography</h2>
+      <p class="ds-section-desc">Cormorant Garamond for headings and editorial moments. Inter for UI, body, and data. Tight tracking on display; wide tracking on uppercase labels.</p>
+
+      <div class="panel" style="margin-bottom:24px">
+        <div class="panel-label">Serif · display & headings</div>
+        <div class="panel-value">"Cormorant Garamond", weights 300 / 400 / 500</div>
+      </div>
+      <div class="panel" style="margin-bottom:32px">
+        <div class="panel-label">Sans · UI & body</div>
+        <div class="panel-value">"Inter", weights 300 / 400 / 500 / 600</div>
+      </div>
+
+      <div>
+        <div class="type-row"><span class="type-label">Display</span><span class="type-sample" style="font-size:72px;font-weight:300;letter-spacing:-.01em">Aa</span><span class="type-meta">72px / 1.05 / 300<br>--text-6xl</span></div>
+        <div class="type-row"><span class="type-label">H1</span><span class="type-sample" style="font-size:56px;font-weight:300">Premium marble</span><span class="type-meta">56px / 1.05 / 300</span></div>
+        <div class="type-row"><span class="type-label">H2</span><span class="type-sample" style="font-size:42px;font-weight:400">Section heading</span><span class="type-meta">42px / 1.1 / 400</span></div>
+        <div class="type-row"><span class="type-label">H3</span><span class="type-sample" style="font-size:32px;font-weight:400">Sub heading</span><span class="type-meta">32px / 1.2 / 400</span></div>
+        <div class="type-row"><span class="type-label">H4</span><span class="type-sample" style="font-size:24px;font-weight:500">Card title</span><span class="type-meta">24px / 1.3 / 500</span></div>
+        <div class="type-row"><span class="type-label">Body</span><span class="type-sample" style="font-family:var(--font-sans);font-size:15px;line-height:1.7;color:#3a3a3a">Quality natural stone, sourced from the Gazgan district and trusted by international buyers since 1998.</span><span class="type-meta">15px / 1.7 sans</span></div>
+        <div class="type-row"><span class="type-label">Small</span><span class="type-sample" style="font-family:var(--font-sans);font-size:13px;color:var(--color-muted)">Supporting copy and helper text.</span><span class="type-meta">13px sans</span></div>
+        <div class="type-row"><span class="type-label">Eyebrow</span><span class="type-sample" style="font-family:var(--font-sans);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--color-gold);font-weight:500">— since 1998</span><span class="type-meta">11px / .32em / 500</span></div>
+      </div>
+    </section>
+
+    <!-- SPACING -->
+    <section id="spacing">
+      <div class="ds-section-eyebrow">03 — Foundation</div>
+      <h2 class="ds-section-title">Spacing</h2>
+      <p class="ds-section-desc">4-px base scale. Use multiples for consistent rhythm; large compositions favor 48 / 80 / 120-px vertical breathing room.</p>
+
+      <div class="panel">
+        <div class="space-row"><span class="space-label">--space-1</span><span class="space-bar" style="width:4px"></span><span class="space-px">4px</span></div>
+        <div class="space-row"><span class="space-label">--space-2</span><span class="space-bar" style="width:8px"></span><span class="space-px">8px</span></div>
+        <div class="space-row"><span class="space-label">--space-3</span><span class="space-bar" style="width:12px"></span><span class="space-px">12px</span></div>
+        <div class="space-row"><span class="space-label">--space-4</span><span class="space-bar" style="width:16px"></span><span class="space-px">16px</span></div>
+        <div class="space-row"><span class="space-label">--space-6</span><span class="space-bar" style="width:24px"></span><span class="space-px">24px</span></div>
+        <div class="space-row"><span class="space-label">--space-8</span><span class="space-bar" style="width:32px"></span><span class="space-px">32px</span></div>
+        <div class="space-row"><span class="space-label">--space-12</span><span class="space-bar" style="width:48px"></span><span class="space-px">48px</span></div>
+        <div class="space-row"><span class="space-label">--space-16</span><span class="space-bar" style="width:64px"></span><span class="space-px">64px</span></div>
+        <div class="space-row"><span class="space-label">--space-20</span><span class="space-bar" style="width:80px"></span><span class="space-px">80px</span></div>
+        <div class="space-row" style="border-bottom:none"><span class="space-label">--space-24</span><span class="space-bar" style="width:96px"></span><span class="space-px">96px</span></div>
+      </div>
+    </section>
+
+    <!-- SHADOWS -->
+    <section id="shadows">
+      <div class="ds-section-eyebrow">04 — Foundation</div>
+      <h2 class="ds-section-title">Elevation</h2>
+      <p class="ds-section-desc">Soft, diffused shadows only. Never use harsh drops — the brand reads as quiet luxury.</p>
+
+      <div class="grid cols-3">
+        <div class="shadow-demo" style="box-shadow:var(--shadow-card)">card<br><span style="color:var(--color-gold-dark)">--shadow-card</span></div>
+        <div class="shadow-demo" style="box-shadow:var(--shadow-soft)">soft<br><span style="color:var(--color-gold-dark)">--shadow-soft</span></div>
+        <div class="shadow-demo" style="box-shadow:var(--shadow-hover)">hover<br><span style="color:var(--color-gold-dark)">--shadow-hover</span></div>
+      </div>
+    </section>
+
+    <!-- MOTION -->
+    <section id="motion">
+      <div class="ds-section-eyebrow">05 — Foundation</div>
+      <h2 class="ds-section-title">Motion</h2>
+      <p class="ds-section-desc">Slow, cinematic easing. Hovers are confident; reveals are unhurried. Use <code class="inline">cubic-bezier(.2,.7,.2,1)</code> as the default.</p>
+
+      <div class="panel"><div class="panel-label">Default ease</div><div class="panel-value">cubic-bezier(0.2, 0.7, 0.2, 1) &nbsp;·&nbsp; <code class="inline">--ease-out</code></div></div>
+      <div class="panel"><div class="panel-label">Durations</div><div class="panel-value">fast 0.2s · normal 0.4s · slow 0.8s · cinematic 1.2s</div></div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section id="buttons">
+      <div class="ds-section-eyebrow">01 — Component</div>
+      <h2 class="ds-section-title">Buttons</h2>
+      <p class="ds-section-desc">Three primary variants. Gold for the single most important action on a page; ink for general primary; ghost for tertiary.</p>
+
+      <div class="demo">
+        <a class="btn btn-gold">Katalog Ko'rish <span class="btn-arrow"></span></a>
+        <a class="btn btn-ink">Biz bilan Bog'lanish <span class="btn-arrow"></span></a>
+        <a class="btn btn-ghost">View All <span class="btn-arrow"></span></a>
+      </div>
+      <div class="demo" style="background:var(--color-ink)">
+        <a class="btn" style="color:#fff">Katalog Ko'rish <span class="btn-arrow"></span></a>
+        <a class="btn btn-gold">Primary <span class="btn-arrow"></span></a>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section id="badges">
+      <div class="ds-section-eyebrow">02 — Component</div>
+      <h2 class="ds-section-title">Badges</h2>
+      <p class="ds-section-desc">Used for status, category, and lightweight labels in the admin console.</p>
+
+      <div class="demo">
+        <span class="badge badge-neutral">Neutral</span>
+        <span class="badge badge-gold">Featured</span>
+        <span class="badge badge-green">Active</span>
+        <span class="badge badge-red">Failed</span>
+        <span class="badge badge-blue">In review</span>
+        <span class="badge badge-amber">New</span>
+      </div>
+    </section>
+
+    <!-- FIELDS -->
+    <section id="fields">
+      <div class="ds-section-eyebrow">03 — Component</div>
+      <h2 class="ds-section-title">Form fields</h2>
+      <p class="ds-section-desc">Uppercase eyebrow label, square borders, bottom-focus underline color.</p>
+
+      <div class="demo" style="display:grid;grid-template-columns:repeat(2,1fr);align-items:start">
+        <div class="field"><label>Full name</label><input type="text" placeholder="Akmal Karimov" /></div>
+        <div class="field"><label>Country</label><select><option>Uzbekistan</option><option>UAE</option><option>Italy</option></select></div>
+        <div class="field" style="grid-column:span 2"><label>Project details</label><textarea rows="3" placeholder="Volume, finish, timeline..."></textarea></div>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section id="cards">
+      <div class="ds-section-eyebrow">04 — Component</div>
+      <h2 class="ds-section-title">Product card</h2>
+      <p class="ds-section-desc">Image-first, copy-second. Category in gold uppercase eyebrow, title in serif, description in muted sans.</p>
+
+      <div class="grid cols-3" style="background:transparent;border:none;gap:24px">
+        <div class="card-sample">
+          <div class="card-image" data-marble></div>
+          <div class="card-body">
+            <div class="card-cat">Signature</div>
+            <div class="card-title">White Marble</div>
+            <div class="card-desc">Pure, luminous, timeless. The defining stone of palaces and modern villas.</div>
+          </div>
+        </div>
+        <div class="card-sample">
+          <div class="card-image"></div>
+          <div class="card-body">
+            <div class="card-cat">Premium</div>
+            <div class="card-title">Black Marble</div>
+            <div class="card-desc">Deep, dramatic veining for statement interiors.</div>
+          </div>
+        </div>
+        <div class="card-sample">
+          <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=800&q=80')"></div>
+          <div class="card-body">
+            <div class="card-cat">Architectural</div>
+            <div class="card-title">Granite</div>
+            <div class="card-desc">Robust, enduring, sculptural — engineered by geology.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="ds-section-eyebrow">05 — Pattern</div>
+      <h2 class="ds-section-title">Hero composition</h2>
+      <p class="ds-section-desc">Black marble photography, double overlay (linear + radial), centered editorial logotype, gold divider, CTA pair.</p>
+
+      <div class="hero-preview">
+        <div class="hero-preview-content">
+          <div class="hero-preview-eyebrow">Uzbekistan · Since 1998</div>
+          <div class="hero-preview-title">GAZGAN MARMAR</div>
+          <div class="hero-preview-divider"></div>
+          <div class="hero-preview-sub">Premium Marble &amp; Granite Export</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USAGE -->
+    <section id="usage">
+      <div class="ds-section-eyebrow">Reference</div>
+      <h2 class="ds-section-title">Usage</h2>
+      <p class="ds-section-desc">Tokens are exported in three forms — use whichever fits the platform.</p>
+
+      <div class="panel">
+        <div class="panel-label">CSS variables</div>
+        <div class="panel-value">@import "@gazgan/design-system/css";<br>color: var(--color-gold);</div>
+      </div>
+      <div class="panel">
+        <div class="panel-label">TypeScript</div>
+        <div class="panel-value">import { colors } from "@gazgan/design-system";<br>colors.gold.DEFAULT</div>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Tailwind</div>
+        <div class="panel-value">extend: { colors: tokens.colors }</div>
+      </div>
+
+      <div style="margin-top:60px;padding-top:32px;border-top:1px solid var(--color-line);color:var(--color-muted);font-size:11px;letter-spacing:.18em;text-transform:uppercase">
+        Gazgan Marmar Design System · v1.0 · © 2026
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

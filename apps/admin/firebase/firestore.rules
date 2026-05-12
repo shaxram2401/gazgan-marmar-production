@@ -1,0 +1,114 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ---------- helpers ---------- */
+    function isSignedIn() { return request.auth != null; }
+
+    function adminDoc() {
+      return get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data;
+    }
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid))
+        && adminDoc().active == true;
+    }
+    function hasRole(r) { return isAdmin() && adminDoc().role == r; }
+    function isSuperAdmin() { return hasRole('super_admin'); }
+    function isManager()    { return hasRole('manager') || isSuperAdmin(); }
+    function isSales()      { return hasRole('sales_manager') || isManager(); }
+
+    /* ---------- adminUsers (super admin only) ---------- */
+    match /adminUsers/{uid} {
+      allow read:  if isAdmin() && (request.auth.uid == uid || isSuperAdmin());
+      allow write: if isSuperAdmin();
+    }
+
+    /* ---------- public content (website reads) ---------- */
+    match /products/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+    match /entrepreneurs/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+    match /gallery/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+    match /testimonials/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+    match /exportCountries/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+    match /catalogVersions/{doc} {
+      allow read:  if true;
+      allow write: if isManager();
+    }
+
+    /* ---------- inquiries / leads ---------- */
+    match /inquiries/{id} {
+      // Anyone may CREATE a lead from the public website,
+      // but only with required fields and bounded size.
+      allow create: if request.resource.data.keys().hasAll(
+                         ['name','country','company','whatsapp','email','leadType','product','quantity'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() < 200
+                    && request.resource.data.email.matches('.+@.+\\..+');
+      allow read, update: if isSales();
+      allow delete: if isSuperAdmin();
+    }
+
+    /* ---------- settings (single doc: settings/global) ---------- */
+    match /settings/{id} {
+      allow read:  if true;
+      allow write: if isSuperAdmin();
+    }
+
+    /* ---------- notifications ---------- */
+    match /notifications/{id} {
+      // Created server-side only; admins can read & mark read
+      allow read, update: if isAdmin();
+      allow create, delete: if false;
+    }
+
+    /* ---------- event logs (public website tracking) ---------- */
+    match /eventLogs/{id} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false; // only server-side
+    }
+
+    /* ---------- audit logs ---------- */
+    match /auditLogs/{id} {
+      allow read:  if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    /* ---------- alerts (system events) ---------- */
+    match /alerts/{id} {
+      allow read, update: if isAdmin();
+      allow create, delete: if false; // server-side only
+    }
+
+    /* ---------- backups history ---------- */
+    match /backups/{id} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    /* ---------- rate limits + login attempts (server-only) ---------- */
+    match /rateLimits/{id}     { allow read, write: if false; }
+    match /loginAttempts/{id}  { allow read, write: if false; }
+
+    /* default deny */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

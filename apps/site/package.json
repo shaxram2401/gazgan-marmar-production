@@ -1,0 +1,22 @@
+{
+  "name": "gazgan-marmo",
+  "version": "1.0.0",
+  "description": "Premium marble & granite export — Gazgan, Uzbekistan",
+  "private": true,
+  "homepage": "https://gazganmarmo.uz",
+  "scripts": {
+    "dev": "npx serve -p 3000",
+    "build": "echo 'Static site — no build needed.'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "marble",
+    "granite",
+    "export",
+    "uzbekistan",
+    "gazgan",
+    "natural stone"
+  ],
+  "author": "Gazgan Marmo Alliance LLC",
+  "license": "UNLICENSED"
+}

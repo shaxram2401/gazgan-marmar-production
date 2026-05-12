@@ -1,0 +1,29 @@
+{
+  "name": "gazgan-marmar-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gazgan Marmar — premium marble & granite export platform. Public website + admin console + shared design system.",
+  "homepage": "https://gazganmarmo.uz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shaxram2401/gazgan-marmar-site.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Gazgan Marmar Alliance LLC",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:site":  "echo '➜ Open apps/site/index.html locally or run: npx serve apps/site -p 3000'",
+    "dev:admin": "npm --workspace apps/admin run dev",
+    "build:admin": "npm --workspace apps/admin run build",
+    "typecheck": "npm --workspace apps/admin run typecheck",
+    "lint":      "npm --workspace apps/admin run lint",
+    "verify":    "npm --workspace apps/admin run verify",
+    "deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes,storage"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

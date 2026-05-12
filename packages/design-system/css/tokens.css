@@ -1,0 +1,46 @@
+/* ============================================================
+   Gazgan Marmar — Shared Design Tokens (CSS)
+   Imported by both apps/site and apps/admin.
+============================================================ */
+
+:root {
+  /* Colors */
+  --color-ink:       #0a0a0a;
+  --color-graphite:  #1c1c1c;
+  --color-paper:     #fafaf8;
+  --color-white:     #ffffff;
+  --color-line:      #e6e6e6;
+  --color-muted:     #6b6b6b;
+
+  --color-gold:        #b08d4f;
+  --color-gold-light:  #c9a76a;
+  --color-gold-dark:   #8e6f3a;
+  --color-gold-soft:   rgba(176, 141, 79, 0.08);
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger:  #dc2626;
+  --color-info:    #2563eb;
+
+  /* Typography */
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans:  "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:  ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Motion */
+  --ease-out:  cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast:      0.2s;
+  --duration-normal:    0.4s;
+  --duration-slow:      0.8s;
+  --duration-cinematic: 1.2s;
+
+  /* Shadows */
+  --shadow-soft: 0 24px 60px -30px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.08);
+  --shadow-hover:0 30px 70px -30px rgba(0, 0, 0, 0.20);
+
+  /* Spacing scale (use multiples of 4) */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px;--space-16: 64px;--space-20: 80px;--space-24: 96px;
+}

@@ -1,0 +1,26 @@
+name: Feature request
+description: Propose a new feature or improvement.
+labels: [enhancement, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      placeholder: Today, exporting leads requires manual CSV cleanup because...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: business
+    attributes:
+      label: Business impact
+      placeholder: "Affects: sales workflow / investor reporting / SEO / etc."

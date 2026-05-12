@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() {
+      return isSignedIn() && firestore.exists(
+        /databases/(default)/documents/adminUsers/$(request.auth.uid)
+      );
+    }
+    function isImage() {
+      return request.resource.contentType.matches('image/.*')
+          && request.resource.size < 8 * 1024 * 1024;
+    }
+    function isPdf() {
+      return request.resource.contentType == 'application/pdf'
+          && request.resource.size < 50 * 1024 * 1024;
+    }
+
+    /* public read for all website assets */
+    match /products/{file}     { allow read; allow write: if isAdmin() && isImage(); }
+    match /entrepreneurs/{file}{ allow read; allow write: if isAdmin() && isImage(); }
+    match /gallery/{file}      { allow read; allow write: if isAdmin() && isImage(); }
+    match /testimonials/{file} { allow read; allow write: if isAdmin() && isImage(); }
+    match /catalog/{file}      { allow read; allow write: if isAdmin() && isPdf(); }
+    match /seo/{file}          { allow read; allow write: if isAdmin() && isImage(); }
+
+    match /{path=**} { allow read, write: if false; }
+  }
+}

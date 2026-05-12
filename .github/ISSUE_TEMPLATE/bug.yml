@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a defect in the website or admin console.
+labels: [bug, triage]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where is the bug?
+      options:
+        - apps/site (public website)
+        - apps/admin (admin console)
+        - packages/design-system
+        - Firebase rules / infrastructure
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear, concise description of the bug.
+      placeholder: When I click X, Y happens instead of Z.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Go to /leads
+        2. Click "Filter → Won"
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Browser, OS, screen size, signed-in role, etc."
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or logs

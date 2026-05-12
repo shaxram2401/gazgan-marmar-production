@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  admin:
+    name: Admin · typecheck · lint · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci --ignore-scripts
+
+      - name: TypeScript
+        run: npm --workspace apps/admin run typecheck
+
+      - name: Lint
+        run: npm --workspace apps/admin run lint
+
+      - name: File integrity
+        run: node apps/admin/scripts/verify-deployment.mjs
+        working-directory: apps/admin
+
+      - name: Build
+        run: npm --workspace apps/admin run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: dummy
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: dummy.firebaseapp.com
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: dummy
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: dummy.appspot.com
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '0'
+          NEXT_PUBLIC_FIREBASE_APP_ID: '0:0:web:0'
+          FIREBASE_ADMIN_CREDENTIALS_B64: ${{ secrets.FIREBASE_ADMIN_CREDENTIALS_B64 }}
+          CRON_SECRET: dummy
+          SESSION_COOKIE_NAME: __gm_session
+          SESSION_MAX_AGE: '432000'
+
+  site:
+    name: Site · HTML validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HTML present
+        run: |
+          test -f apps/site/index.html
+          test -f apps/site/style.css
+          test -f apps/site/script.js
+          test -f apps/site/manifest.json
+          test -f apps/site/robots.txt
+          test -f apps/site/sitemap.xml
+          test -f apps/site/vercel.json
+          echo "✓ All required public files present"
