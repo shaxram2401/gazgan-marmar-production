@@ -4,7 +4,7 @@ import { adminDb } from '@/lib/firebase.admin';
 import { getCurrentAdmin } from '@/lib/auth.server';
 import Topbar from '@/components/layout/Topbar';
 import { Card, Badge } from '@/components/ui';
-import { Lead } from '@/types';
+import { Lead, LeadNote } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { ArrowLeft, Mail, MessageCircle, Phone } from 'lucide-react';
 import LeadActions from './LeadActions';
@@ -12,20 +12,53 @@ import LeadNotes from './LeadNotes';
 
 export const dynamic = 'force-dynamic';
 
-async function getLead(id: string) {
+/**
+ * Serialized note shape — what we hand to the client component.
+ * Firestore Timestamps are replaced with ISO strings so the data is
+ * safe to cross the server → client boundary.
+ */
+type SerializedNote = Omit<LeadNote, 'createdAt'> & { createdAt: string };
+
+/**
+ * Serialized lead shape returned to the React tree.
+ * Same idea — every Timestamp becomes a string.
+ */
+type SerializedLead = Omit<Lead, 'createdAt' | 'updatedAt' | 'notes'> & {
+  createdAt: string;
+  updatedAt: string | null;
+  notes: SerializedNote[];
+};
+
+/* Minimal structural shape for an Admin SDK Timestamp value we read. */
+type MaybeTimestamp = { toDate?: () => Date } | undefined;
+function tsToIso(v: MaybeTimestamp): string | null {
+  const d = v?.toDate?.();
+  return d ? d.toISOString() : null;
+}
+
+async function getLead(id: string): Promise<SerializedLead | null> {
   const snap = await adminDb.collection('inquiries').doc(id).get();
   if (!snap.exists) return null;
-  const data = snap.data()!;
+  const data = snap.data() ?? {};
+
+  const rawNotes = Array.isArray(data.notes) ? (data.notes as Array<Record<string, unknown>>) : [];
+  const notes: SerializedNote[] = rawNotes.map((n) => ({
+    text: String(n.text ?? ''),
+    author: String(n.author ?? ''),
+    authorEmail: String(n.authorEmail ?? ''),
+    createdAt:
+      tsToIso(n.createdAt as MaybeTimestamp) ?? new Date().toISOString()
+  }));
+
   return {
+    ...(data as Omit<Lead, 'createdAt' | 'updatedAt' | 'notes'>),
     id: snap.id,
-    ...data,
-    createdAt: data.createdAt?.toDate?.()?.toISOString() ?? data.submittedAt,
-    updatedAt: data.updatedAt?.toDate?.()?.toISOString() ?? null,
-    notes: (data.notes || []).map((n: any) => ({
-      ...n,
-      createdAt: n.createdAt?.toDate?.()?.toISOString() ?? new Date().toISOString()
-    }))
-  } as Lead & { createdAt: string };
+    createdAt:
+      tsToIso(data.createdAt as MaybeTimestamp) ??
+      (typeof data.submittedAt === 'string' ? data.submittedAt : new Date().toISOString()),
+    updatedAt: tsToIso(data.updatedAt as MaybeTimestamp),
+    notes
+  };
 }
 
 export default async function LeadDetailPage({ params }: { params: { id: string } }) {
@@ -133,3 +166,4 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
     </div>
   );
 }
+
